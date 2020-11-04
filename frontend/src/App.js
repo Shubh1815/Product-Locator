@@ -1,26 +1,70 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react'
+import Login from './components/Login/Login'
+import AuthRoutes from './routes/AuthRoutes'
+
+import { BrowserRouter as Router , Switch, Route, Redirect } from 'react-router-dom'
+import './App.css'
+
+import { useCookies } from 'react-cookie'
+
+import AuthContext from './context/authContext'
+
+import axios from 'axios'
+
+const setHeaders = (token) => {
+  axios.defaults.headers.common['Authorization'] = `Token ${token}`
+} 
 
 function App() {
+
+  const [ cookies ] = useCookies()
+  const [ isAuth, setIsAuth ] = useState(cookies.key ? true: false)
+  const [ username, setUsername ] = useState('')
+  const [ isAdmin, setIsAdmin ] = useState(null)
+
+  useEffect(() => {
+      if(cookies.key){
+        setIsAuth(true)
+        setHeaders(cookies.key)
+      } else {
+        setIsAuth(false)
+        setIsAdmin(null)
+      }
+  }, [ cookies.key ])
+
+  useEffect(() => {
+    if(isAuth && isAdmin == null){
+      axios.get('http://127.0.0.1:8000/auth/user/')
+      .then((response) => {
+        console.log(response.data)
+        setIsAdmin(response.data.is_superuser)
+        setUsername(response.data.pk)
+      })
+      .catch((err) => {
+        console.log(err.response)
+        setIsAuth(false)
+        setIsAdmin(null)
+      })
+    }
+  }, [ isAuth, isAdmin, cookies.key ])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <AuthContext.Provider value={{
+      'isAuth': isAuth,
+      'token': cookies.key,
+      'setIsAuth': setIsAuth,
+      'isAdmin': isAdmin,
+      'username': username
+    }}>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Login} />
+          { isAuth  && <AuthRoutes isAdmin={isAdmin} /> }
+          <Redirect to="/"/>
+        </Switch>
+      </Router>
+    </AuthContext.Provider>
+  )
 }
 
-export default App;
+export default App

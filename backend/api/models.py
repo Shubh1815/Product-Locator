@@ -14,10 +14,16 @@ class Arena(models.Model):
 
 class Transaction(models.Model):
     product_id = models.CharField(max_length=100, primary_key=True)
-    location_id = models.ForeignKey(Arena, on_delete=models.CASCADE)
+    location_id = models.ForeignKey(Arena, on_delete=models.CASCADE, related_name='products')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    row = models.IntegerField(null=True)
+    col = models.IntegerField(null=True)
+
     date = models.DateField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('location_id', 'row', 'col')
 
     def __str__(self):
         return self.product_id
