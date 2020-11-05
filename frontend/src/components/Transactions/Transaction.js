@@ -12,6 +12,9 @@ import EditIcon from '@material-ui/icons/Edit'
 const useStyles = makeStyles({
     root: {
         'margin': '24px auto', 
+        '& > div': {
+            'min-height': '350px'
+        }
     },
     tableHeader: {
         '& > tr > th': {

@@ -14,7 +14,11 @@ User = get_user_model()
 @api_view(['GET', 'POST'])
 def transactionList(request):
     if request.method == 'GET':
-        queryset = Transaction.objects.all().order_by('-date')
+        user = request.user 
+        queryset = Transaction.objects.all()
+        if not user.is_superuser:
+            queryset = queryset.filter(user_id=user)
+        queryset = queryset.order_by('-date')
         serializer = TransactionSerializer(queryset, many=True)
 
         return Response(serializer.data)
@@ -44,7 +48,7 @@ def arena_list_or_create(request):
 
             return Response(serializer.data)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def transaction_detail(request, pk):

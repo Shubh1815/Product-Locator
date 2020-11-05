@@ -21,6 +21,10 @@ const UpdateTransaction = (props) => {
 
     // Arena Context
     const [ arena, setArena ] = useState('')
+    const [ productPos, setProductPos ] = useState({
+        'row': '',
+        'col': ''
+    })
     const [ pos, setPos ] = useState({
         'row': '',
         'col': ''
@@ -68,6 +72,8 @@ const UpdateTransaction = (props) => {
             'setArena': setArena,
             'pos': pos,
             'setPos': setPos,
+            'productPos': productPos,
+            'setProductPos': setProductPos
         }}>
             <Container maxWidth="lg" style={{marginTop: '30px'}}>
                 <Grid container spacing={2}>

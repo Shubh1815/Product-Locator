@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import axios from 'axios'
 
+
 const useStyle = makeStyles({
     root: {
         'margin-top': '45px',
@@ -23,26 +24,30 @@ const useStyle = makeStyles({
     }
 })
 
-const UserForm = () => {
+const Password = () => {
 
     const classes = useStyle()
-    
+
     const [ loading, setLoading ] = useState(false)
     const [ success, setSuccess ] = useState('')
     const [ state, setState ] = useState({
-        'username': '',
-        // 'email': '',
-        'password1': '',
-        'password2': ''
+        'old_password': '',
+        'new_password1': '',
+        'new_password2': '',
     })
     const [ error, setError ] = useState({
-        'username': '',
-        'password1': '',
-        'password2': ''
+        'old_password': '',
+        'new_password1': '',
+        'new_password2': '',
     })
 
     const handleChange = (event) => {
         setSuccess('')
+        setError({
+            'old_password': '',
+            'new_password1': '',
+            'new_password2': '',
+        })
         const label = event.target.name
         const value = event.target.value
 
@@ -54,16 +59,15 @@ const UserForm = () => {
     }
 
     const handleSubmit = () => {
-        
         setLoading(true)
-        axios.post('http://127.0.0.1:8000/auth/register/', state)
+        axios.post('http://127.0.0.1:8000/auth/password/change/', state)
         .then((response) => {
-            setSuccess('User Registered')
+            setSuccess('Password changed successfully')
             console.log(response.data)
             setState({
-                'username': '',
-                'password1': '',
-                'password2': ''
+                'old_password': '',
+                'new_password1': '',
+                'new_password2': '',
             })
             setLoading(false)
         })
@@ -71,9 +75,9 @@ const UserForm = () => {
             setLoading(false)
             console.log(err.response)
             setError({
-                'username': err.response.data.username,
-                'password1': err.response.data.password1 && err.response.data.password1.join(" "),
-                'password2': err.response.data.non_field_errors && err.response.data.non_field_errors[0],
+                'old_password': err.response.data.old_password,
+                'new_password1': err.response.data.new_password1,
+                'new_password2': err.response.data.new_password2,
             })
         })
         
@@ -83,29 +87,30 @@ const UserForm = () => {
         <Container maxWidth="sm"  className={classes.root}>
             <Grid container spacing={2} component={Paper} className={classes.wrapper}>
                 <Grid item xs={12}>
-                    <Typography component="div" variant="h4" align="center">Register User</Typography>
+                    <Typography component="div" variant="h4" align="center">Change Password</Typography>
                     { success && <Alert severity="success" >{success}</Alert> }
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
-                        label="Username" 
-                        value={state.username}
-                        name="username"
-                        error={Boolean(error.username)}
-                        helperText={error.username}
+                        label="Old Password" 
+                        value={state.old_password}
+                        name="old_password"
+                        error={Boolean(error.old_password)}
+                        helperText={error.old_password}
                         variant="outlined"
                         onChange={handleChange} 
+                        type="password"
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
-                        value={state.password1}
-                        label="Password" 
-                        name="password1"
+                        value={state.new_password1}
+                        label="New Password" 
+                        name="new_password1"
                         variant="outlined" 
-                        error={Boolean(error.password1)}
-                        helperText={error.password1}
+                        error={Boolean(error.new_password1)}
+                        helperText={error.new_password1}
                         onChange={handleChange}
                         type="password"
                         fullWidth
@@ -113,19 +118,19 @@ const UserForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
-                        value={state.password2}
-                        label="Confirm Password"
-                        name="password2" 
+                        value={state.new_password2}
+                        label="Confirm Password" 
+                        name="new_password2"
                         variant="outlined" 
-                        error={Boolean(error.password2)}
-                        helperText={error.password2}
+                        error={Boolean(error.new_password2)}
+                        helperText={error.new_password2}
                         onChange={handleChange}
                         type="password"
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <Button fullWidth variant="contained" className={classes.button} onClick={handleSubmit}>Register</Button>
+                    <Button fullWidth variant="contained" className={classes.button} onClick={handleSubmit}>Change</Button>
                     { loading && <LinearProgress /> }
                 </Grid>
             </Grid>
@@ -133,4 +138,4 @@ const UserForm = () => {
     )
 }
 
-export default UserForm
+export default Password

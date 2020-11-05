@@ -16,6 +16,13 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields = ('product_id', 'location_id', 'user_id', 'row', 'col', 'date')
 
+    def validate(self, data):
+
+        if (0 < data['row'] <= data['location_id'].rows) and (0 < data['col'] < data['location_id'].cols):
+            return data
+
+        raise serializers.ValidationError("Invalid Row or Column")
+
 class ArenaSerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField()
     

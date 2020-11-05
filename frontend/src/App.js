@@ -12,23 +12,29 @@ import AuthContext from './context/authContext'
 import axios from 'axios'
 
 const setHeaders = (token) => {
-  axios.defaults.headers.common['Authorization'] = `Token ${token}`
+  axios.defaults.headers.common['Authorization'] = token
 } 
 
 function App() {
 
   const [ cookies ] = useCookies()
   const [ isAuth, setIsAuth ] = useState(cookies.key ? true: false)
-  const [ username, setUsername ] = useState('')
+  const [ user, setUser ] = useState({
+    'pk': '',
+    'username': null,
+    'email': '',
+  })
   const [ isAdmin, setIsAdmin ] = useState(null)
 
   useEffect(() => {
       if(cookies.key){
         setIsAuth(true)
-        setHeaders(cookies.key)
+        setHeaders(`Token ${cookies.key}`)
       } else {
+        setHeaders('')
         setIsAuth(false)
         setIsAdmin(null)
+        
       }
   }, [ cookies.key ])
 
@@ -38,7 +44,7 @@ function App() {
       .then((response) => {
         console.log(response.data)
         setIsAdmin(response.data.is_superuser)
-        setUsername(response.data.pk)
+        setUser(response.data)
       })
       .catch((err) => {
         console.log(err.response)
@@ -54,7 +60,7 @@ function App() {
       'token': cookies.key,
       'setIsAuth': setIsAuth,
       'isAdmin': isAdmin,
-      'username': username
+      'user': user
     }}>
       <Router>
         <Switch>

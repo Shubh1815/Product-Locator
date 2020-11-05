@@ -67,6 +67,7 @@ const useStyle = makeStyles({
         'cursor': 'pointer',
         'transition': 'background 500ms'
     },
+    
     filled:{
         'cursor': 'default',
         'background-color': '#636363',
@@ -74,16 +75,21 @@ const useStyle = makeStyles({
     selected: {
         'background-color': 'red',
     },
+    product: {
+        'cursor': 'default',
+        'background-color': '#3cef65',
+    },
 })
 
 const Arena = ({ data, veiw, loading }) => {
 
     const context = useContext(ArenaContext)
-    let setPos = null, pos = null 
+    let setPos = null, pos = null, productPos = null
 
     if(context){
         setPos = context.setPos
         pos = context.pos
+        productPos = context.productPos
     }
 
     const arenaLayout = useRef()
@@ -121,14 +127,23 @@ const Arena = ({ data, veiw, loading }) => {
     const generateBlock = (row, col) => {
         if(index + 1 < data.products.length && data.products[index + 1].row === row + 1 && data.products[index + 1].col === col + 1){
             index += 1
-            return <Paper 
+            return  productPos && productPos.row === row + 1 && productPos.col === col + 1 ? (
+                    <Paper 
+                        className={`${classes.block} ${classes.product}`} 
+                        component={veiw ? Link : "span"}
+                        key={row * data.cols + col}
+                        title={veiw && data.products[index].product_id}
+                        to={`/transaction/${data.products[index].product_id}`}
+                        style={veiw && {cursor: 'pointer'}}
+                    />) : (
+                        <Paper 
                         className={`${classes.block} ${classes.filled}`} 
                         component={veiw ? Link : "span"}
                         key={row * data.cols + col}
                         title={veiw && data.products[index].product_id}
                         to={`/transaction/${data.products[index].product_id}`}
                         style={veiw && {cursor: 'pointer'}}
-                    />
+                    />)
         } else {
             return (pos && row + 1 === pos.row && col + 1 === pos.col) ? (
                     <Paper 

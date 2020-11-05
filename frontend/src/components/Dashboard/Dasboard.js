@@ -48,7 +48,9 @@ const Dashboard = () => {
                 console.log(err)
             }
         }
-        fetchData()
+        if(token){
+            fetchData()
+        }
     }, [ token ])
 
     return (

@@ -14,6 +14,7 @@ import AuthContext from '../../../../context/authContext'
 
 const useStyle = makeStyles({
     root:{
+        'min-height': '500px',
         '& > div': {
             'margin': '10px 12px'
         }
@@ -37,7 +38,10 @@ const useStyle = makeStyles({
 const Form = (props) => {
     const id = props.id
 
-    const { username, token } = useContext(AuthContext)
+    const { user,  isAdmin } = useContext(AuthContext)
+    const username = user.pk
+
+    const [ allowUser, setAllowUser ] = useState(false)
     const [ success, setSuccess ] = useState('')
     const [ error, setError ] = useState({})
     const [ data, setData ] = useState({
@@ -48,13 +52,12 @@ const Form = (props) => {
         'col': ''
     })
 
-    console.log(data)
     const [ loading, setLoading ] = useState(false)
     const [ toggleDialogBox, setToggleDialogBox ] = useState(false)
 
     const history = useHistory()
 
-    const { arena, setArena, pos, setPos } = useContext(ArenaContext)
+    const { arena, setArena, pos, setPos, setProductPos } = useContext(ArenaContext)
     
     const classes = useStyle() 
 
@@ -75,7 +78,7 @@ const Form = (props) => {
     }, [ pos ])
 
     useEffect(() => {
-        if(id && token){
+        if(id && axios.defaults.headers.common['Authorization']){
             let source = axios.CancelToken.source()
             axios.get(`http://127.0.0.1:8000/api/transaction/${id}/`, {
                 cancelToken: source.token
@@ -84,14 +87,24 @@ const Form = (props) => {
                 console.log(response.data)
                 setData(response.data)
                 setArena(response.data.location_id)
+                setProductPos({
+                    'row': response.data.row,
+                    'col': response.data.col
+                })
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err.response)
             })
 
             return () => (source.cancel())
         }
-    }, [ id, token, setArena ])
+    }, [ id, setArena, setProductPos ])
+
+    useEffect(() => {
+        if((username === data.user_id) || isAdmin === true){
+            setAllowUser(true)
+        }
+    }, [ data, username, isAdmin ])
 
     const handleData = (event) => {
         setSuccess("")
@@ -163,7 +176,6 @@ const Form = (props) => {
         })
     }
 
-    console.log(error)
     return (
         <React.Fragment>
             <Grid container component={Paper} className={classes.root}>
@@ -184,6 +196,7 @@ const Form = (props) => {
                         error={Boolean(error.product_id)}
                         helperText={error.product_id}
                         variant="outlined"
+                        disabled={Boolean(id)}
                     />
                 </Grid>
                 <Grid item xs={12}>
@@ -236,7 +249,7 @@ const Form = (props) => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    {props.update ? 
+                    {props.update ? (allowUser && (
                         <React.Fragment>
                             <Button variant="contained" className={classes.button} onClick={handleUpdate}>Update</Button>
                             <Button variant="contained" color="secondary" onClick={() => setToggleDialogBox(true)} >Delete</Button>
@@ -251,6 +264,7 @@ const Form = (props) => {
                                 </DialogActions>
                             </Dialog>
                         </React.Fragment>
+                    ))
                         : 
                         <Button variant="contained" className={`${classes.button} ${classes.add}`} fullWidth onClick={handlePost}>
                             Add

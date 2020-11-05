@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Container, Paper, Grid, Typography } from '@material-ui/core'
 import { TextField, Button } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
@@ -6,6 +6,8 @@ import { Alert } from '@material-ui/lab'
 import { makeStyles } from '@material-ui/core/styles'
 
 import axios from 'axios'
+
+import AuthContext from '../../context/authContext'
 
 const useStyle = makeStyles({
     root: {
@@ -23,23 +25,29 @@ const useStyle = makeStyles({
     }
 })
 
-const UserForm = () => {
+const Profile = () => {
 
     const classes = useStyle()
-    
+
+    const { user } = useContext(AuthContext)
+
     const [ loading, setLoading ] = useState(false)
     const [ success, setSuccess ] = useState('')
     const [ state, setState ] = useState({
-        'username': '',
-        // 'email': '',
-        'password1': '',
-        'password2': ''
+        'username': user.username ? user.username : '',
+        'email': user.email,
     })
     const [ error, setError ] = useState({
         'username': '',
-        'password1': '',
-        'password2': ''
+        'email': '',
     })
+
+    useEffect(() => {
+        setState({
+            'username': user.username ? user.username : '',
+            'email': user.email,
+        })
+    }, [ user ])
 
     const handleChange = (event) => {
         setSuccess('')
@@ -54,16 +62,14 @@ const UserForm = () => {
     }
 
     const handleSubmit = () => {
-        
         setLoading(true)
-        axios.post('http://127.0.0.1:8000/auth/register/', state)
+        axios.put('http://127.0.0.1:8000/auth/user/', state)
         .then((response) => {
-            setSuccess('User Registered')
+            setSuccess('User Profile Updated')
             console.log(response.data)
             setState({
-                'username': '',
-                'password1': '',
-                'password2': ''
+                'username': response.data.username,
+                'email': response.data.email,
             })
             setLoading(false)
         })
@@ -72,8 +78,7 @@ const UserForm = () => {
             console.log(err.response)
             setError({
                 'username': err.response.data.username,
-                'password1': err.response.data.password1 && err.response.data.password1.join(" "),
-                'password2': err.response.data.non_field_errors && err.response.data.non_field_errors[0],
+                'email': err.response.data.email && err.response.data.email.join(" ")
             })
         })
         
@@ -83,7 +88,7 @@ const UserForm = () => {
         <Container maxWidth="sm"  className={classes.root}>
             <Grid container spacing={2} component={Paper} className={classes.wrapper}>
                 <Grid item xs={12}>
-                    <Typography component="div" variant="h4" align="center">Register User</Typography>
+                    <Typography component="div" variant="h4" align="center">User Profile</Typography>
                     { success && <Alert severity="success" >{success}</Alert> }
                 </Grid>
                 <Grid item xs={12}>
@@ -100,32 +105,18 @@ const UserForm = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
-                        value={state.password1}
-                        label="Password" 
-                        name="password1"
+                        value={state.email}
+                        label="Email" 
+                        name="email"
                         variant="outlined" 
-                        error={Boolean(error.password1)}
-                        helperText={error.password1}
+                        error={Boolean(error.email)}
+                        helperText={error.email}
                         onChange={handleChange}
-                        type="password"
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField 
-                        value={state.password2}
-                        label="Confirm Password"
-                        name="password2" 
-                        variant="outlined" 
-                        error={Boolean(error.password2)}
-                        helperText={error.password2}
-                        onChange={handleChange}
-                        type="password"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button fullWidth variant="contained" className={classes.button} onClick={handleSubmit}>Register</Button>
+                    <Button fullWidth variant="contained" className={classes.button} onClick={handleSubmit}>Update</Button>
                     { loading && <LinearProgress /> }
                 </Grid>
             </Grid>
@@ -133,4 +124,4 @@ const UserForm = () => {
     )
 }
 
-export default UserForm
+export default Profile

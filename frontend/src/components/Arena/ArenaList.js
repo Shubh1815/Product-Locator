@@ -36,20 +36,23 @@ const ArenaList = () => {
         'products': []
     })
 
-    const { token } = useContext(AuthContext)
+    const { user } = useContext(AuthContext)
 
     const classes = useStyle()
 
     useEffect(() => {
-        axios.get('http://127.0.0.1:8000/api/arena/')
-        .then((response) => {
-            console.log(response.data)
-            setArenas(response.data)
-        })
-        .catch((err) => {
-            console.log(err)
-        })
-    }, [ token ])
+        if(axios.defaults.headers.common['Authorization']){
+            axios.get('http://127.0.0.1:8000/api/arena/')
+            .then((response) => {
+                console.log(response.data)
+                setArenas(response.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+        }
+        
+    }, [ user ])
 
     const handleArena = (event) => {
         const data = arenas.find((arena) => event.currentTarget.getAttribute('data-location-id') === arena.location_id)

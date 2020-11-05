@@ -3,6 +3,8 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 
 import Navbar from '../components/Navbar/Navbar'
 import Dashboard from '../components/Dashboard/Dasboard'
+import Profile from '../components/Profile/Profile'
+import Password from '../components/Profile/Password'
 import Chart from '../components/Dashboard/Chart/Chart'
 import UpdateTransaction from '../components/Transactions/UpdateTransaction/UpdateTransaction'
 import ArenaList from '../components/Arena/ArenaList'
@@ -16,7 +18,9 @@ const AuthRoutes = ({ isAdmin }) => {
             <Navbar />
             <Switch>
                 {isAdmin != null && <Route path="/dashboard" component={isAdmin === false ? UserDashboard : Dashboard} />}
-                {isAdmin && <Route exact path="/chart" component={Chart} />}
+                <Route exact path="/profile" component={Profile}/>
+                <Route exact path="/password/change" component={Password}/>
+                <Route exact path="/chart" component={Chart} />
 
                 <Route exact path="/transaction/new/" component={UpdateTransaction} />
                 <Route exact path="/transaction/:id/" component={(props) => <UpdateTransaction {...props} update/>} />

@@ -23,7 +23,7 @@ class Transaction(models.Model):
     date = models.DateField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('location_id', 'row', 'col')
+        unique_together = (('location_id', 'row', 'col'),)
 
     def __str__(self):
         return self.product_id

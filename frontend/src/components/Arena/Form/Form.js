@@ -3,6 +3,7 @@ import { Container, Paper, Grid, Typography } from '@material-ui/core'
 import { TextField, Button } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import { makeStyles } from '@material-ui/core/styles'
+import { Alert } from '@material-ui/lab'
 
 import axios from 'axios'
 
@@ -32,9 +33,21 @@ const ArenaForm = () => {
         'rows': '',
         'cols': ''
     })
+    const [ success, setSucces ] = useState('')
+    const [ error, setError ] = useState({
+        'location_id': '',
+        'rows': '',
+        'cols': ''
+    })
 
 
     const handleChange = (event) => {
+        setSucces('')
+        setError({
+            'location_id': '',
+            'rows': '',
+            'cols': ''
+        })
         const label = event.target.name
         const value = event.target.value
 
@@ -46,29 +59,34 @@ const ArenaForm = () => {
     }
 
     const handleSubmit = () => {
-        if(state.location_id && state.rows && state.cols){
-            setLoading(true)
-            axios.post('http://127.0.0.1:8000/api/arena/', state)
-            .then((response) => {
-                console.log(response.data)
-                setState((prevState) => ({
-                    'location_id': '',
-                    'rows': '',
-                    'cols': ''
-                }))
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-        }
+        
+        setLoading(true)
+        axios.post('http://127.0.0.1:8000/api/arena/', state)
+        .then((response) => {
+            console.log(response.data)
+            setState((prevState) => ({
+                'location_id': '',
+                'rows': '',
+                'cols': ''
+            }))
+            setSucces('Arena Added')
+            setLoading(false)
+        })
+        .catch((err) => {
+            console.log(err.response)
+            setError(err.response.data)
+            setLoading(false)
+        })
+        
     }
-
+    console.log(error)
     return (
         <Container maxWidth="sm"  className={classes.root}>
             <Grid container spacing={2} component={Paper} className={classes.wrapper}>
                 <Grid item xs={12}>
                     <Typography component="div" variant="h4" align="center">New Arena</Typography>
+                    { success && <Alert severity="success">{success}</Alert> }
+                    { error.non_field_errors && <Alert severity="error">{error.non_field_errors.join(" ").capital}</Alert> }
                 </Grid>
                 <Grid item xs={12}>
                     <TextField 
@@ -77,6 +95,8 @@ const ArenaForm = () => {
                         name="location_id"
                         variant="outlined"
                         onChange={handleChange} 
+                        error={Boolean(error.location_id)}
+                        helperText={error.location_id}
                         fullWidth
                     />
                 </Grid>
@@ -88,6 +108,8 @@ const ArenaForm = () => {
                         variant="outlined" 
                         onChange={handleChange}
                         type="number"
+                        error={Boolean(error.rows)}
+                        helperText={error.rows}
                         fullWidth
                     />
                 </Grid>
@@ -99,6 +121,8 @@ const ArenaForm = () => {
                         variant="outlined" 
                         onChange={handleChange}
                         type="number"
+                        error={Boolean(error.cols)}
+                        helperText={error.cols}
                         fullWidth
                     />
                 </Grid>

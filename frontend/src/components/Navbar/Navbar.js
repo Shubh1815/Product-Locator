@@ -13,8 +13,12 @@ import PersonIcon from '@material-ui/icons/Person'
 import HomeWorkIcon from '@material-ui/icons/HomeWork'
 import AssessmentIcon from '@material-ui/icons/Assessment'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import VpnKeyIcon from '@material-ui/icons/VpnKey'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 import AuthContext from '../../context/authContext'
+
+import axios from 'axios'
 
 const useStyle = makeStyles({
     brand: {
@@ -56,8 +60,15 @@ const Navbar = () => {
     const { isAdmin } = useContext(AuthContext)
 
     const handleLogout = () => {    
-        removeCookies('key', {path: '/'})
-        history.push("/")
+        axios.post('http://127.0.0.1:8000/auth/logout/')
+        .then((response) => {
+            console.log(response.data)
+            removeCookies('key', {path: '/'})
+            history.push("/")
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     }
 
     const openMenu = (event) => {
@@ -98,8 +109,17 @@ const Navbar = () => {
                         open={open}
                         onClose={closeMenu}
                     >
-                        <MenuItem>Change Password</MenuItem>
-                        <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                        <MenuItem component={Link} to="/profile">
+                            <ListItemIcon> <PersonIcon /> </ListItemIcon> 
+                            Profile
+                        </MenuItem>
+                        <MenuItem component={Link} to="/password/change">
+                            <ListItemIcon> <VpnKeyIcon /> </ListItemIcon>Change Password
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem onClick={handleLogout}>
+                            <ListItemIcon> <ExitToAppIcon /> </ListItemIcon> Log Out
+                        </MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>
@@ -148,33 +168,32 @@ const Navbar = () => {
                     </div>
 
                     {isAdmin && 
-                        <React.Fragment>
-                            <div className="nav-item">
-                                <ListItem>
-                                    <ListItemIcon className={classes.ListItemIcon}>
-                                        <PersonIcon />
-                                    </ListItemIcon>
+                        <div className="nav-item">
+                            <ListItem>
+                                <ListItemIcon className={classes.ListItemIcon}>
+                                    <PersonIcon />
+                                </ListItemIcon>
 
-                                    <ListItemText primary="Users" />
+                                <ListItemText primary="Users" />
 
+                            </ListItem>
+                            <List className={classes.nestedList}>
+                                <ListItem button component={Link} to="/user/new">
+                                    <ListItemText primary="Add User" classes={{ primary: classes.nestedListItem }} />
                                 </ListItem>
-                                <List className={classes.nestedList}>
-                                    <ListItem button component={Link} to="/user/new">
-                                        <ListItemText primary="Add User" classes={{ primary: classes.nestedListItem }} />
-                                    </ListItem>
-                                </List>
-                            </div>
-                            <div className="nav-item">
-                                <ListItem button component={Link} to="/chart">
-                                    <ListItemIcon className={classes.ListItemIcon}>
-                                        <AssessmentIcon />
-                                    </ListItemIcon>
-
-                                    <ListItemText primary="Visuals" />
-                                </ListItem>
-                            </div>
-                        </React.Fragment>
+                            </List>
+                        </div>
                     }
+                    <div className="nav-item">
+                        <ListItem button component={Link} to="/chart">
+                            <ListItemIcon className={classes.ListItemIcon}>
+                                <AssessmentIcon />
+                            </ListItemIcon>
+
+                            <ListItemText primary="Visuals" />
+                        </ListItem>
+                    </div>
+                        
                     
                 </List>
 
