@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider'
 
 import Statistics from './Statistics/Statistics'
 import Transactions from '../Transactions/Transaction'
+import Filter from './Filter/Filter'
 
 import AuthContext from '../../context/authContext'
 
@@ -18,9 +19,9 @@ const Dashboard = () => {
             'user': '',
             'transaction': '',
             'arena': ''
-        },
-        'loading': true
+        }
     })
+    const [ loading, setLoading ] = useState(true)
     const [ transaction, setTransaction ] = useState([])
     
     const { token } = useContext(AuthContext)
@@ -40,9 +41,9 @@ const Dashboard = () => {
                             'user': userCount.data.user,
                             'transaction': transactionCount,
                             'arena': arenaCount.data.arena
-                        },
-                        'loading': false
+                        }
                     })
+                    setLoading(false)
                 }
             } catch(err){
                 console.log(err)
@@ -60,7 +61,9 @@ const Dashboard = () => {
             <Typography component="h4" variant="h4">Transaction Status</Typography>
             <Divider />
 
-            <Transactions rows={transaction} setTransaction={setTransaction} loading={state.loading}/>
+            <Filter setTransaction={setTransaction} setLoading={setLoading}/>
+
+            <Transactions rows={transaction} setTransaction={setTransaction} loading={loading}/>
 
         </Container>
     )

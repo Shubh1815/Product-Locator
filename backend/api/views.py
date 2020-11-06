@@ -13,12 +13,10 @@ User = get_user_model()
 
 @api_view(['GET', 'POST'])
 def transactionList(request):
+    
     if request.method == 'GET':
-        user = request.user 
-        queryset = Transaction.objects.all()
-        if not user.is_superuser:
-            queryset = queryset.filter(user_id=user)
-        queryset = queryset.order_by('-date')
+        
+        queryset = Transaction.objects.search(data=request.GET, current_user=request.user).order_by('-date')
         serializer = TransactionSerializer(queryset, many=True)
 
         return Response(serializer.data)

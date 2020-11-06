@@ -8,6 +8,7 @@ import DirectionsBoatIcon from '@material-ui/icons/DirectionsBoat'
 
 import Stat from './Stat'
 import Transactions from '../Transactions/Transaction'
+import Filter from '../Dashboard/Filter/Filter'
 
 import axios from 'axios'
 
@@ -29,6 +30,18 @@ const UserDashboard = () => {
         'transactions': [],
         'loading': true,
     })
+
+    const setLoading = (isLoading) => {
+        setData((prevState) => (
+            {...prevState, 'loading': isLoading}
+        ))
+    }
+
+    const setTransaction = (transactions) => {
+        setData((prevState) => (
+            {...prevState, 'transactions': transactions}
+        ))
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,7 +69,7 @@ const UserDashboard = () => {
             <Container maxWidth="lg">
                 <Grid container className={classes.statistic}>
                     <Grid item xs={12} md={6}>
-                        <Stat bg="linear-gradient(270deg, rgb(251 103 103) 25%, rgb(249 63 23) 90%)" className={classes.stat}>
+                        <Stat bg="linear-gradient(270deg, rgb(251, 103, 103) 25%, rgb(253 77 39) 90%)" className={classes.stat}>
                             <div className='header'>
                                 <PersonIcon fontSize="large"/> <Typography component="div" variant="h5">  User Info</Typography>
                             </div>
@@ -88,6 +101,8 @@ const UserDashboard = () => {
             <Container maxWidth="xl">
                 <Typography component="h4" variant="h4">Transaction Status</Typography>
                 <Divider />
+
+                <Filter setTransaction={setTransaction} setLoading={setLoading}/>
 
                 <Transactions rows={data.transactions} loading={data.loading}/>
             </Container>

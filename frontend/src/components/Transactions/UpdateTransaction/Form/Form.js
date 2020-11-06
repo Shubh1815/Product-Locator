@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Grid, Paper} from '@material-ui/core'
+import { Grid, Paper, Box} from '@material-ui/core'
 import { TextField, Button, Typography, Divider } from '@material-ui/core'
 import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } from '@material-ui/core'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { Alert } from '@material-ui/lab'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -250,9 +251,12 @@ const Form = (props) => {
                 </Grid>
                 <Grid item xs={12}>
                     {props.update ? (allowUser && (
-                        <React.Fragment>
+                        <Box display="flex" justifyContent="start" alignItems="center">
                             <Button variant="contained" className={classes.button} onClick={handleUpdate}>Update</Button>
                             <Button variant="contained" color="secondary" onClick={() => setToggleDialogBox(true)} >Delete</Button>
+                    
+                            {loading && <CircularProgress size={24} style={{ margin: '0 10px' }}/>}
+                            
                             <Dialog open={toggleDialogBox} onClose={() => setToggleDialogBox(false)}>
                                 <DialogTitle>Delete Product</DialogTitle>
                                 <DialogContent>
@@ -263,14 +267,17 @@ const Form = (props) => {
                                     <Button variant="outlined" onClick={() => setToggleDialogBox(false)} autoFocus>Cancel</Button>
                                 </DialogActions>
                             </Dialog>
-                        </React.Fragment>
+                            
+                        </Box>
                     ))
-                        : 
-                        <Button variant="contained" className={`${classes.button} ${classes.add}`} fullWidth onClick={handlePost}>
-                            Add
-                        </Button>}
-                    
-                    {loading && <LinearProgress className={classes.loader} />}
+                        : (
+                        <React.Fragment>
+                            <Button variant="contained" className={`${classes.button} ${classes.add}`} fullWidth onClick={handlePost}>
+                                Add
+                            </Button>
+                            {loading && <LinearProgress className={classes.loader} />}
+                        </React.Fragment>
+                    )}
                 </Grid>
             </Grid>
         </React.Fragment>

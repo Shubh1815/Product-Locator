@@ -42,7 +42,7 @@ const Transactions = (props) => {
     return (
         <Container maxWidth="lg" className={classes.root} >
             <TableContainer component={Paper} elevation={3}>
-                <Table stickyHeader>
+                <Table>
                     <TableHead className={classes.tableHeader}>
                         <TableRow>
                             <TableCell align="center" width="22.5%">Product ID</TableCell>

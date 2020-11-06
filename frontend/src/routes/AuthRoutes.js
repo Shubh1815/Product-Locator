@@ -29,7 +29,7 @@ const AuthRoutes = ({ isAdmin }) => {
                 { isAdmin && <Route exact path="/arena/new/" component={ArenaForm}/> }
 
                 { isAdmin && <Route exact path="/user/new" component={UserForm} /> }
-                { isAdmin != null && <Redirect to="/"/> }
+                { isAdmin != null && <Redirect to="/dashboard"/> }
             </Switch>
         </React.Fragment>
     )
