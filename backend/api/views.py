@@ -2,11 +2,12 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model
 
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .models import Transaction, Arena
 from .serializer import TransactionSerializer, ArenaSerializer
+from .permissions import IsAdmin, IsAdminOrReadOnly
 # Create your views here.
 
 User = get_user_model()
@@ -15,7 +16,6 @@ User = get_user_model()
 def transactionList(request):
     
     if request.method == 'GET':
-        
         queryset = Transaction.objects.search(data=request.GET, current_user=request.user).order_by('-date')
         serializer = TransactionSerializer(queryset, many=True)
 
@@ -30,6 +30,7 @@ def transactionList(request):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAdmin])
 def arena_list_or_create(request):
     if request.method == 'GET':
         queryset = Arena.objects.all()
@@ -49,6 +50,7 @@ def arena_list_or_create(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAdminOrReadOnly])
 def transaction_detail(request, pk):
     queryset = Transaction.objects.get(pk=pk)
 
