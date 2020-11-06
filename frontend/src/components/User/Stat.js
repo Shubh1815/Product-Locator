@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Paper from '@material-ui/core/Paper'
+import Grow from '@material-ui/core/Grow'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyle = makeStyles((theme) => ({
@@ -24,14 +25,19 @@ const useStyle = makeStyles((theme) => ({
 
 const Stat = (props) => {
 
+    const [ grow, setGrow ] = useState(false)
     const classes = useStyle()
 
+    useEffect(() => {
+        setGrow(true)
+    }, [])
+
     return (
-        <Paper elevation={4} className={classes.root} style={{background: props.bg}}>
-           
-            {props.children}
-            
-        </Paper>
+        <Grow in={grow} timeout={500}>
+            <Paper elevation={4} className={classes.root} style={{background: props.bg}}>
+                {props.children}
+            </Paper>
+        </Grow>
     )
 }
 

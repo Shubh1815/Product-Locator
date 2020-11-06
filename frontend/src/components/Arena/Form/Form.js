@@ -79,7 +79,7 @@ const ArenaForm = () => {
         })
         
     }
-    console.log(error)
+
     return (
         <Container maxWidth="sm"  className={classes.root}>
             <Grid container spacing={2} component={Paper} className={classes.wrapper}>

@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useContext } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import { Link } from 'react-router-dom'
-import { Paper, Typography, Grid } from '@material-ui/core'
+import { Paper, Typography, Grid, Grow } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Skeleton from '@material-ui/lab/Skeleton'
@@ -83,6 +83,8 @@ const useStyle = makeStyles({
 
 const Arena = ({ data, veiw, loading }) => {
 
+    const [ grow, setGrow ] = useState(false)
+
     const context = useContext(ArenaContext)
     let setPos = null, pos = null, productPos = null
 
@@ -99,6 +101,12 @@ const Arena = ({ data, veiw, loading }) => {
     const selected = useRef(null)
 
     const classes = useStyle()
+
+    useEffect(() => {
+        if(arenaLayout){
+            setGrow(true)
+        }
+    }, [ arenaLayout ])
 
     useEffect(() => {
         if(selected.current)
@@ -171,37 +179,39 @@ const Arena = ({ data, veiw, loading }) => {
 
     return (
         loading ? <Skeleton variant="rect" height={500}/> :
-        <Paper component="div" className={classes.root} >
-            <Typography component="div" variant="h4" align="center" className={classes.arenaTitle}>Arena {data.location_id}</Typography>
+        <Grow in={grow} timeout={750}>
+            <Paper component="div" className={classes.root} >
+                <Typography component="div" variant="h4" align="center" className={classes.arenaTitle}>Arena {data.location_id}</Typography>
 
-            <Grid container className={classes.layout}>
-                <Grid item xs={1}></Grid>
-                <Grid item xs={11} ref={indexRow} className={classes.indexRow}>
-                    {Array.from(Array(data.cols).keys()).map((col) => (
-                        <Paper className={classes.index} component="span" key={col}>{col + 1}</Paper>
-                    ))}
-                </Grid>
-                <Grid item xs={1} ref={indexCol} className={classes.indexCol}>
-                    {Array.from(Array(data.rows).keys()).map((row) => (
-                        <Paper className={classes.index} component="span" key={row}>{row + 1}</Paper>
-                    ))}
-                </Grid>
-                <Grid item xs={11} className={classes.arena} ref={arenaLayout} onScroll={handleScroll}>
-                    <Grid container  >
-                        {Array.from(Array(data.rows).keys()).map((row) => {
-                            return (
-                                <Grid item xs={12} key={row}>
-                                    {Array.from(Array(data.cols).keys()).map((col) => (
-                                        generateBlock(row, col)
-                                    ))}
-                                </Grid>
-                            )
-                        })}
+                <Grid container className={classes.layout}>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={11} ref={indexRow} className={classes.indexRow}>
+                        {Array.from(Array(data.cols).keys()).map((col) => (
+                            <Paper className={classes.index} component="span" key={col}>{col + 1}</Paper>
+                        ))}
+                    </Grid>
+                    <Grid item xs={1} ref={indexCol} className={classes.indexCol}>
+                        {Array.from(Array(data.rows).keys()).map((row) => (
+                            <Paper className={classes.index} component="span" key={row}>{row + 1}</Paper>
+                        ))}
+                    </Grid>
+                    <Grid item xs={11} className={classes.arena} ref={arenaLayout} onScroll={handleScroll}>
+                        <Grid container  >
+                            {Array.from(Array(data.rows).keys()).map((row) => {
+                                return (
+                                    <Grid item xs={12} key={row}>
+                                        {Array.from(Array(data.cols).keys()).map((col) => (
+                                            generateBlock(row, col)
+                                        ))}
+                                    </Grid>
+                                )
+                            })}
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
 
-        </Paper>
+            </Paper>
+        </Grow>
     )
 }
 

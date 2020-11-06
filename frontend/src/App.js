@@ -17,7 +17,7 @@ const setHeaders = (token) => {
 
 function App() {
 
-  const [ cookies ] = useCookies()
+  const [ cookies, , removeCookie ] = useCookies()
   const [ isAuth, setIsAuth ] = useState(cookies.key ? true: false)
   const [ user, setUser ] = useState({
     'pk': '',
@@ -48,11 +48,12 @@ function App() {
       })
       .catch((err) => {
         console.log(err.response)
+        removeCookie('key')
         setIsAuth(false)
         setIsAdmin(null)
       })
     }
-  }, [ isAuth, isAdmin, cookies.key ])
+  }, [ isAuth, isAdmin, cookies.key, removeCookie ])
 
   return (
     <AuthContext.Provider value={{
@@ -60,7 +61,8 @@ function App() {
       'token': cookies.key,
       'setIsAuth': setIsAuth,
       'isAdmin': isAdmin,
-      'user': user
+      'user': user,
+      'setUser': setUser,
     }}>
       <Router>
         <Switch>

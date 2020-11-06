@@ -43,6 +43,12 @@ const UserForm = () => {
 
     const handleChange = (event) => {
         setSuccess('')
+        setError({
+            'username': '',
+            'password1': '',
+            'password2': ''
+        })
+        
         const label = event.target.name
         const value = event.target.value
 

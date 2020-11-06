@@ -29,7 +29,7 @@ const Profile = () => {
 
     const classes = useStyle()
 
-    const { user } = useContext(AuthContext)
+    const { user, setUser } = useContext(AuthContext)
 
     const [ loading, setLoading ] = useState(false)
     const [ success, setSuccess ] = useState('')
@@ -67,10 +67,11 @@ const Profile = () => {
         .then((response) => {
             setSuccess('User Profile Updated')
             console.log(response.data)
-            setState({
-                'username': response.data.username,
-                'email': response.data.email,
-            })
+            // setState({
+            //     'username': response.data.username,
+            //     'email': response.data.email,
+            // })
+            setUser(response.data)
             setLoading(false)
         })
         .catch((err) => {

@@ -41,6 +41,11 @@ const ArenaList = () => {
     const classes = useStyle()
 
     useEffect(() => {
+        if(arenas.length)
+            setArenaData(arenas[0])
+    }, [ arenas ])
+
+    useEffect(() => {
         if(axios.defaults.headers.common['Authorization']){
             axios.get('http://127.0.0.1:8000/api/arena/')
             .then((response) => {
