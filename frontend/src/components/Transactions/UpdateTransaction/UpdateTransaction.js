@@ -22,6 +22,7 @@ const UpdateTransaction = (props) => {
     // Arena Context
     const [ arena, setArena ] = useState('')
     const [ productPos, setProductPos ] = useState({
+        'arena': '',
         'row': '',
         'col': ''
     })

@@ -86,9 +86,10 @@ const Arena = ({ data, veiw, loading }) => {
     const [ grow, setGrow ] = useState(false)
 
     const context = useContext(ArenaContext)
-    let setPos = null, pos = null, productPos = null
+    let setPos = null, pos = null, productPos = null, arena = null
 
     if(context){
+        arena = context.arena
         setPos = context.setPos
         pos = context.pos
         productPos = context.productPos
@@ -135,7 +136,7 @@ const Arena = ({ data, veiw, loading }) => {
     const generateBlock = (row, col) => {
         if(index + 1 < data.products.length && data.products[index + 1].row === row + 1 && data.products[index + 1].col === col + 1){
             index += 1
-            return  productPos && productPos.row === row + 1 && productPos.col === col + 1 ? (
+            return  productPos && arena === productPos.arena && productPos.row === row + 1 && productPos.col === col + 1 ? (
                     <Paper 
                         className={`${classes.block} ${classes.product}`} 
                         component={veiw ? Link : "span"}

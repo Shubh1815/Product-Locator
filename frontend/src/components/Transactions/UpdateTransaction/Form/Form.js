@@ -89,6 +89,7 @@ const Form = (props) => {
                 setData(response.data)
                 setArena(response.data.location_id)
                 setProductPos({
+                    'arena': response.data.location_id,
                     'row': response.data.row,
                     'col': response.data.col
                 })
@@ -117,6 +118,7 @@ const Form = (props) => {
         setData(nxtData)
         if(nxtData['location_id'] !== arena){
             setArena(nxtData['location_id'])
+            return
         }
         if( nxtData['row'] !== pos.row ||  nxtData['col'] !== pos.col ){
             setPos({
