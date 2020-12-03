@@ -53,7 +53,7 @@ function App() {
         setIsAdmin(null)
       })
     }
-  }, [ isAuth, isAdmin, cookies.key, removeCookie ])
+  }, [ isAuth, isAdmin, removeCookie ])
 
   return (
     <AuthContext.Provider value={{

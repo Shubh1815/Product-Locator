@@ -27,6 +27,7 @@ const useStyle = makeStyles({
         'height': '390px',
         'overflow': 'auto',
         'whiteSpace': 'nowrap',
+        'scrollbar-width': 'none',
         '&::-webkit-scrollbar':{
             'display': 'none',
         },

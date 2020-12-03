@@ -29,12 +29,15 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try{
-                const transactionResponse = await axios.get('http://localhost:8000/api/transaction')
+                const transactionResponse = await axios.get('http://127.0.0.1:8000/api/transaction/')
                 const transactionCount = transactionResponse.data.length
-                const userCount = await axios.get('http://localhost:8000/api/user/count')
-                const arenaCount = await axios.get('http://localhost:8000/api/arena/count')
+                const userCount = await axios.get('http://127.0.0.1:8000/api/user/count/')
+                const arenaCount = await axios.get('http://127.0.0.1:8000/api/arena/count/')
+
+                console.log(userCount, arenaCount)
 
                 if((transactionResponse.status === 200) && userCount.status === 200 && arenaCount.status === 200){
+                    console.log(transactionResponse)
                     setTransaction(transactionResponse.data)
                     setState({
                         'count': {

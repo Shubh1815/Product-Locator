@@ -42,7 +42,7 @@ const Filter = ({ setTransaction, setLoading }) => {
     const handleFilter = () => {
         setTransaction([])
         setLoading(true)
-        axios.get('http://localhost:8000/api/transaction', {
+        axios.get('http://127.0.0.1:8000/api/transaction/', {
             params: state,
         })
         .then((response) => {
