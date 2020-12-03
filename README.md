@@ -3,19 +3,22 @@
 ## Setting Up
 
 ## Backend
-
 ```
   $ pip install pipenv
 ```
 
 #### Installing Dependencies
-
 ```
-  $ cd backend
   $ pipenv install
 ```
-#### Starting Server
 
+#### Migrating to database
+```
+  $ pipenv shell 
+  $ python manage.py migrate
+```
+
+#### Starting Server
 ```
   $ pipenv shell
   $ python manage.py runserver
@@ -26,7 +29,6 @@
 #### Installing Dependencies
 
 ```
-  $ cd frontend 
   $ npm install
 ```
 
@@ -36,19 +38,7 @@
   $ npm start
 ```
 
-## Credentials
-
-##### Admin
-Username - shubh  
-password - qscfthnm
-
-##### Test User
-Username - test  
-password - qscfthnm
-
 ## Creating new admin
-
 ```
-  $ cd backend
   $ python manage.py createsuperuser
 ```
