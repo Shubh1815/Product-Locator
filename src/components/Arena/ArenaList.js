@@ -13,6 +13,9 @@ const useStyle = makeStyles((theme) => ({
     root: {
         'margin-top': '20px'
     },
+    divider: {
+        'border': '0.25px solid #c4c4c4'
+    },
     button: {
         'background': theme.palette.info.dark,
         'margin': '0 8px',
@@ -71,7 +74,7 @@ const ArenaList = () => {
     return (
         <Container classes={{root: classes.root}} maxWidth="lg">
             <Typography component="div" variant="h4" align="center">Arenas</Typography>
-            <hr />
+            <hr className={classes.divider}/>
             <Box display="flex" maxWidth="lg" justifyContent="center">
                 {arenas.map((arena) => (
                     <Button variant="contained" key={arena.location_id} size="large" color="primary" className={classes.button} data-location-id={arena.location_id} onClick={handleArena}>{arena.location_id}</Button>
