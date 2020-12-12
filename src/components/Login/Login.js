@@ -106,7 +106,9 @@ const Login = () => {
             expires.setDate(expires.getDate() + 1)
             setCookie('key', response.data.key, {
                 expires: expires,
-                path: '/'
+                path: '/',
+                secure: true,
+                sameSite: "none",
             })
             setRedirect('/dashboard')
         })

@@ -63,7 +63,11 @@ const Navbar = () => {
         axios.post('http://127.0.0.1:8000/auth/logout/')
         .then((response) => {
             console.log(response.data)
-            removeCookies('key', {path: '/'})
+            removeCookies('key', { 
+                path: '/',
+                secure: true,
+                sameSite: "none", 
+            })
             history.push("/")
         })
         .catch((err) => {

@@ -11,8 +11,9 @@ import AuthContext from './context/authContext'
 
 import axios from 'axios'
 
-const setHeaders = (token) => {
+const setHeaders = (token, csrftoken) => {
   axios.defaults.headers.common['Authorization'] = token
+  axios.defaults.headers.common['X-CSRFToken'] = csrftoken
 } 
 
 function App() {
@@ -29,14 +30,14 @@ function App() {
   useEffect(() => {
       if(cookies.key){
         setIsAuth(true)
-        setHeaders(`Token ${cookies.key}`)
+        setHeaders(`Token ${cookies.key}`, cookies.csrftoken)
       } else {
-        setHeaders('')
+        setHeaders('', cookies.csrftoken)
         setIsAuth(false)
         setIsAdmin(null)
         
       }
-  }, [ cookies.key ])
+  }, [ cookies.key, cookies.csrftoken ])
 
   useEffect(() => {
     if(isAuth && isAdmin == null){
@@ -48,7 +49,11 @@ function App() {
       })
       .catch((err) => {
         console.log(err.response)
-        removeCookie('key')
+        removeCookie('key', { 
+          path: '/',
+          secure: true,
+          sameSite: "none", 
+        })
         setIsAuth(false)
         setIsAdmin(null)
       })
