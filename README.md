@@ -2,7 +2,7 @@
 
 **Login Page**
 
-![](/imgs/login.png)
+!['Login Page'](/imgs/login.png)
 
 **Admin Dashboard**  
  
@@ -10,22 +10,24 @@
 - A transaction could be created by any registered user.
 - Admin could update or delete any transaction.
 
-![](/imgs/admin-dashboard.png)
+!['Admin Dashboard'](/imgs/admin-dashboard.png)
 
 **User Dashboard**  
 
 - A registered user could view all the warehouses and transactions in the database. 
 - The user could only update or delete transactions which were created by him.
 
-![](/imgs/user-dashboard.png)
+!['User Dashboard'](/imgs/user-dashboard.png)
+
+!['Transaction'](/imgs/transaction.png)
 
 **Warehouse (Arena) List**
 
-![](/imgs/arena.png)
+!['Warehouses'](/imgs/arena.png)
 
 **Warehouse (Arena) Analytics**
 
-![](/imgs/arena-analytics.png)
+!['Analytics'](/imgs/arena-analytics.png)
 
 ## Setting Up
 
